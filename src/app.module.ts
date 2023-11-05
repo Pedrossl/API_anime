@@ -9,6 +9,10 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 import { ConfigModule } from '@nestjs/config';
 import { UserEntity } from './user/entity/user.entity';
+import { AnimeModule } from './anime/anime.module';
+import { GeneroModule } from './genero/genero.module';
+import { Anime } from './anime/entities/anime.entity';
+import { Genero } from './genero/entities/genero.entity';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -20,13 +24,15 @@ import { UserEntity } from './user/entity/user.entity';
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE,
-        entities: [ UserEntity],
+        entities: [UserEntity,Anime,Genero],
         synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
         logging: process.env.TYPEORM_LOGGING === 'false',
       }),
     }),
     UserModule,
     AuthModule,
+    AnimeModule,
+    GeneroModule,
   ],
   controllers: [AppController],
   providers: [
