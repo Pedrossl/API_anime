@@ -1,7 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { RoleUserEnum } from '../enums/role-user.enum';
-
-
+import { Anime } from 'src/anime/entities/anime.entity';
 
 @Entity()
 export class UserEntity {
@@ -20,4 +25,7 @@ export class UserEntity {
   @Column({ type: 'enum', enum: RoleUserEnum, default: RoleUserEnum.newUser })
   role?: RoleUserEnum;
 
+  @ManyToMany(() => Anime, (anime) => anime.users)
+  @JoinTable()
+  animes?: Anime[];
 }

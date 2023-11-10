@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAnimeDto } from './dto/create-anime.dto';
-import { UpdateAnimeDto } from './dto/update-anime.dto';
 import { Anime } from './entities/anime.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,6 +13,7 @@ export class AnimeService {
     @InjectRepository(Genero)
     private generoRepository: Repository<Genero>,
   ) {}
+
   async create(createAnimeDto: CreateAnimeDto) {
     const existeGenero = await this.generoRepository.findOne({
       where: { id: createAnimeDto.genero_id },
@@ -33,15 +33,12 @@ export class AnimeService {
       .getMany();
   }
 
+  async updateRating(id: number, nota: number): Promise<Anime> {
+    const anime = await this.animeRepository.findOne({ where: { id } });
+    console.log(anime);
 
-
-async updateRating(id: number, nota: number) : Promise<Anime> {
-const anime = await this.animeRepository.findOne({ where: { id } });
-console.log(anime)
-
-  
-return this.animeRepository.save({ ...anime, nota});
-}
+    return this.animeRepository.save({ ...anime, nota });
+  }
 
   async remove(id: number) {
     const anime = await this.animeRepository.findOne({ where: { id } });

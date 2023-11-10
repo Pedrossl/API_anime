@@ -32,11 +32,13 @@ export class AnimeController {
   }*/
 
   @Patch('/note/:id')
-  updateRating(@Param('id', ParseIntPipe) id: number, @Body() updateAnimeDto: UpdateAnimeDto) {
-   console.log(id);
-   console.log(typeof id);
-   
-   
+  updateRating(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateAnimeDto: UpdateAnimeDto,
+  ) {
+    console.log(id);
+    console.log(typeof id);
+
     return this.animeService.updateRating(id, updateAnimeDto.nota);
   }
 

@@ -1,8 +1,10 @@
 import { Genero } from 'src/genero/entities/genero.entity';
+import { UserEntity } from 'src/user/entity/user.entity';
 import {
   Column,
   Entity,
   JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -30,4 +32,8 @@ export class Anime {
   @ManyToOne(() => Genero, (genero) => genero.animes)
   @JoinTable()
   genero: Genero;
+
+  @ManyToMany(() => UserEntity, (user) => user.animes)
+  @JoinTable()
+  users: UserEntity[];
 }
