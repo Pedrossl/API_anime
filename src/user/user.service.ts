@@ -9,6 +9,7 @@ import { UserEntity } from './entity/user.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Anime } from 'src/anime/entities/anime.entity';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,7 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
     @InjectRepository(Anime)
     private animeRepository: Repository<Anime>,
+    private readonly mailerservice: MailerService,
   ) {}
 
   async createUser(body: CreateUserDTO): Promise<UserEntity> {
@@ -85,10 +87,44 @@ export class UserService {
     });
 
     if (!anime) {
-      throw new BadRequestException('Anime not found');
+      throw new BadRequestException('Anime not found in your list');
     }
 
     user.animes = user.animes.filter((anime) => anime.id !== animeId);
     return this.userRepository.save(user);
+  }
+  
+  async showUserAnimeList(userId: number): Promise<UserEntity> {
+    const user = await this.userRepository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.animes', 'anime')
+    .leftJoinAndSelect('anime.genero', 'genero')
+    .select(['user.name', 'user.id', 'anime.titulo', 'genero.nome','anime.id','genero.id'])
+    .where('user.id = :id', { id: userId })
+    .getOne();
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
+  }
+
+  async sendEmail(): Promise<boolean> {
+   await this.mailerservice.sendMail({
+      to:'NotasBrasil@ritogames.com',
+      from: 'ASHASHASH@banana.com',
+      subject: 'Testing Nest MailerModule ✔',
+      text: 'welcome',
+      html: '<b>welcome</b>',
+    }
+    
+    )
+    return true
+    /*.then(() => {
+      console.log('email sent');
+    }
+    ).catch((error) => {
+      console.log(error);
+    });*/
+    
   }
 }

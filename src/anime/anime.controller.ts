@@ -11,6 +11,7 @@ import {
 import { AnimeService } from './anime.service';
 import { CreateAnimeDto } from './dto/create-anime.dto';
 import { UpdateAnimeDto } from './dto/update-anime.dto';
+import { IsPublic } from 'src/decorators/is-public.decorator';
 
 @Controller('animes')
 export class AnimeController {
@@ -21,6 +22,8 @@ export class AnimeController {
     return this.animeService.create(createAnimeDto);
   }
 
+  
+  @IsPublic()
   @Get()
   findAll() {
     return this.animeService.findAll();

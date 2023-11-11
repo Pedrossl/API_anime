@@ -1,12 +1,10 @@
 import {
-  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -24,7 +22,7 @@ export class UserController {
     private userService: UserService,
   ) {}
 
-  @IsPublic()
+  @IsPublic() 
   @Post()
   async create(@Body() body: CreateUserDTO): Promise<{ data: UserEntity }> {
     try {
@@ -34,7 +32,7 @@ export class UserController {
       throw error;
     }
   }
-
+  
   @Get()
   async findAll(): Promise<{ data: UserEntity[] }> {
     const list = await this.model.find();
@@ -47,5 +45,23 @@ export class UserController {
     @CurrentUser() user: UserEntity,
   ): Promise<UserEntity> {
     return this.userService.addAnimeToUser(animeId, user.id);
+  }
+
+  @Delete('/remove-anime/:animeId')
+  async removeAnimeFromUser(
+    @Param('animeId') animeId: number,
+    @CurrentUser() user: UserEntity,
+  ): Promise<UserEntity> {
+    return this.userService.removeAnimeFromUser(animeId, user.id);
+  }
+
+  @Get('/animesList')
+  async getUserAnimes(@CurrentUser() user: UserEntity): Promise<UserEntity> {
+    return this.userService.showUserAnimeList(user.id);
+  }
+
+  @Post('/email')
+  async sendEmail(): Promise<boolean> {
+    return this.userService.sendEmail();
   }
 }

@@ -13,9 +13,31 @@ import { AnimeModule } from './anime/anime.module';
 import { GeneroModule } from './genero/genero.module';
 import { Anime } from './anime/entities/anime.entity';
 import { Genero } from './genero/entities/genero.entity';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    MailerModule.forRoot({
+      transport: {
+        host: "sandbox.smtp.mailtrap.io",
+        port: 587,
+        auth: {
+          user: "3b00f8cecc3986",
+          pass: "4a9bd6add94f9e"
+        },
+      },
+      defaults: {
+        from: '"AnimeCom" <3b00f8cecc3986>'
+      },
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new PugAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: process.env.DB_TYPE as 'mysql',
