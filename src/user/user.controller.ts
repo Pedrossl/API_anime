@@ -61,7 +61,14 @@ export class UserController {
   }
 
   @Post('/email')
-  async sendEmail(): Promise<boolean> {
-    return this.userService.sendEmail();
+  async sendEmail(@CurrentUser() user:UserEntity): Promise<string> {
+    console.log(user.email);
+    
+    return this.userService.sendEmail(user.email);
+  }
+
+  @Get('/verify')
+  async verifyEmail(@CurrentUser() user:UserEntity, @Body('code') code: string): Promise<string> {
+    return this.userService.verifyCode(code,user.email);
   }
 }

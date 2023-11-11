@@ -10,6 +10,7 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Anime } from 'src/anime/entities/anime.entity';
 import { MailerService } from '@nestjs-modules/mailer';
+import { RoleUserEnum } from './enums/role-user.enum';
 
 @Injectable()
 export class UserService {
@@ -108,23 +109,65 @@ export class UserService {
     return user;
   }
 
-  async sendEmail(): Promise<boolean> {
-   await this.mailerservice.sendMail({
-      to:'NotasBrasil@ritogames.com',
-      from: 'ASHASHASH@banana.com',
-      subject: 'Testing Nest MailerModule ✔',
-      text: 'welcome',
-      html: '<b>welcome</b>',
-    }
-    
-    )
-    return true
-    /*.then(() => {
-      console.log('email sent');
-    }
-    ).catch((error) => {
+  async sendEmail(userEmail: string): Promise<string> {
+    const queryRunner = this.userRepository.manager.connection.createQueryRunner();
+  
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+  
+    try {
+      const user = await this.userRepository.findOne({ where: { email: userEmail } });
+  
+      if (!user) {
+        await queryRunner.rollbackTransaction();
+        return 'Usuário não encontrado';
+      }
+  
+      const code = Math.floor(Math.random() * 1000000) + 1;
+      user.code = code.toString();
+  
+      await this.mailerservice.sendMail({
+        to: user.email,
+        from: 'Suporte@AnimeCom.com',
+        subject: 'Testing Nest MailerModule ✔',
+        text: 'Bem-vindo',
+        html: `<b>Bem-vindo</b> <p>Seu código de verificação é: ${code}</p>`,
+      });
+  
+      await this.userRepository.save(user);
+      await queryRunner.commitTransaction();
+  
+      console.log('Email enviado e código salvo');
+      return 'Código enviado para o email';
+    } catch (error) {
       console.log(error);
-    });*/
+      await queryRunner.rollbackTransaction();
+      return 'Erro ao enviar email, tente novamente mais tarde';
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async verifyCode(code: string, userEmail: string): Promise<string> {
+    const user = await this.userRepository.findOne({
+      where: { email: userEmail },
+    });
+
+    if(user.role !== RoleUserEnum.newUser){
+      return 'Usuario não é mais um novo usuario';
+     }
+     console.log(user.role);
+     
+
+    const userCode = user?.code;
+    console.log(userCode);
     
+    if (userCode === code) {
+      user.role = RoleUserEnum.commonUser
+      await this.userRepository.save(user);
+      return 'Codigo verificado com sucesso';
+    } else {
+      return 'Codigo incorreto';
+    }
   }
 }
