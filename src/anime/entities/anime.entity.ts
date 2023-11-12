@@ -33,6 +33,12 @@ export class Anime {
   @JoinTable()
   genero: Genero;
 
+  @Column({ default: false})
+  destaque?: boolean;
+
+  @Column('text')
+  capa: string;
+
   @ManyToMany(() => UserEntity, (user) => user.animes)
   @JoinTable()
   users: UserEntity[];
