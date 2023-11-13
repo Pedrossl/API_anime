@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { GeneroService } from './genero.service';
 import { CreateGeneroDto } from './dto/create-genero.dto';
+import { IsPublic } from 'src/decorators/is-public.decorator';
 
 @Controller('generos')
 export class GeneroController {
@@ -19,6 +20,7 @@ export class GeneroController {
     return await this.generoService.create(createGeneroDto);
   }
 
+  @IsPublic()
   @Get()
   async findAll() {
     return await this.generoService.findAll();
