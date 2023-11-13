@@ -163,7 +163,8 @@ export class UserService {
     console.log(userCode);
     
     if (userCode === code) {
-      user.role = RoleUserEnum.commonUser
+      user.role = RoleUserEnum.commonUser;
+      user.code = null;
       await this.userRepository.save(user);
       return 'Codigo verificado com sucesso';
     } else {
