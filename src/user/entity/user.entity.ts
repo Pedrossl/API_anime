@@ -25,7 +25,7 @@ export class UserEntity {
   @Column({ type: 'enum', enum: RoleUserEnum, default: RoleUserEnum.newUser })
   role?: RoleUserEnum;
 
-  @Column({ default: false, nullable: true })
+  @Column({ default: null, nullable: true })
   code?: string;
 
   @ManyToMany(() => Anime, (anime) => anime.users)
