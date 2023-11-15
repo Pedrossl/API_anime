@@ -49,6 +49,8 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         entities: [UserEntity,Anime,Genero],
         synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
         logging: process.env.TYPEORM_LOGGING === 'false',
+        migrationsRun: process.env.TYPEORM_MIGRATIONS_RUN === 'true',
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
       }),
     }),
     UserModule,

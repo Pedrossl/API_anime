@@ -40,6 +40,5 @@ export class Anime {
   capa: string;
 
   @ManyToMany(() => UserEntity, (user) => user.animes)
-  @JoinTable()
   users: UserEntity[];
 }
