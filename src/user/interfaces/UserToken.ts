@@ -4,4 +4,5 @@ export interface UserToken {
   accessToken: string;
   user: string;
   role: RoleUserEnum
+  id: number;
 }

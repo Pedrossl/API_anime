@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from 'src/user/entity/user.entity';
 import { UserToken } from 'src/user/interfaces/UserToken';
@@ -20,12 +19,14 @@ export class AuthService {
       email: user.email,
       name: user.name,
       role: user.role,
+      id: user.id,
     };
     const token = this.JwtService.sign(payload);
     return {
       accessToken: token,
       user:user.name,
-      role:user.role
+      role:user.role,
+      id:user.id
     };
   }
 
