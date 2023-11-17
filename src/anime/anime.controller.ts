@@ -39,8 +39,6 @@ export class AnimeController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAnimeDto: UpdateAnimeDto,
   ) {
-    console.log(id);
-    console.log(typeof id);
 
     return this.animeService.updateRating(id, updateAnimeDto.nota);
   }
@@ -48,5 +46,10 @@ export class AnimeController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.animeService.remove(+id);
+  }
+
+  @Patch('/destaque/:id')
+  updateDestaque(@Param('id', ParseIntPipe) id: number) {
+    return this.animeService.updateDestaque(id);
   }
 }

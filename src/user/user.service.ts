@@ -51,7 +51,7 @@ export class UserService {
       throw new InternalServerErrorException(error);
     }
   }
-
+  
   async findById(id: number): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({ where: { id } });
   }

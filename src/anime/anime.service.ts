@@ -60,4 +60,13 @@ export class AnimeService {
     }
     return { msg: 'Deleted', id };
   }
+
+//quero so passar o id do anime, e muda inverte o valor do destaque
+  async updateDestaque(id: number): Promise<Anime | 'not found'> {
+    const anime = await this.animeRepository.findOne({ where: { id } });
+    if (!anime) {
+      return 'not found';
+    }
+    return this.animeRepository.save({ ...anime, destaque: !anime.destaque });
+  }
 }
