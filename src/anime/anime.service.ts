@@ -39,6 +39,13 @@ export class AnimeService {
 
     return this.animeRepository.save({ ...anime, nota });
   }
+  async findOne(id: number): Promise<Anime | 'not found'> {
+    const anime = await this.animeRepository.findOne({ where: { id } });
+    if (!anime) {
+      return 'not found';
+    }
+    return anime;
+  }
 
   async remove(id: number) {
     const anime = await this.animeRepository.findOne({ where: { id } });

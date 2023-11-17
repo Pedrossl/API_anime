@@ -29,10 +29,10 @@ export class AnimeController {
     return this.animeService.findAll();
   }
 
-  /*@Get(':id')
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.animeService.findOne(+id);
-  }*/
+  }
 
   @Patch('/note/:id')
   updateRating(

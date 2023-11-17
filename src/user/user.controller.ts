@@ -39,6 +39,12 @@ export class UserController {
     return { data: list };
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: number): Promise<{ data: UserEntity }> {
+    const user = await this.userService.findById(id);
+    return { data: user };
+  }
+
   @Post('/add-anime/:animeId')
   async addAnimeToUser(
     @Param('animeId') animeId: number,

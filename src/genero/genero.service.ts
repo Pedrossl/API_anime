@@ -51,4 +51,5 @@ export class GeneroService {
     }
     return { msg: 'Deleted', id };
   }
+  
 }
