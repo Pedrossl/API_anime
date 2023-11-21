@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateFavoriteEpisodeDto } from './dto/create-favorite-episode.dto';
 import { UpdateFavoriteEpisodeDto } from './dto/update-favorite-episode.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,12 +22,16 @@ export class FavoriteEpisodeService {
     const user = await this.userRepository.findOne({ where: { id: user_id } });
 
     if(anime.episodios <= episode) {
-      throw new Error('Episodio não existe');
+      throw new HttpException('O episódio especificado não existe para o anime fornecido.', 403);
     }
     
     const favoriteExist = await this.favoriteEpisodeRepository.findOne({
-      where: { user: user_id}
+      where: { user: { id: user_id } }
     })
+
+    if(favoriteExist) {
+      throw new HttpException('Anime já favoritado', 400);
+    }
 
     const favoriteEpisode = this.favoriteEpisodeRepository.create({ anime, user, episode });
     return await this.favoriteEpisodeRepository.save(favoriteEpisode);

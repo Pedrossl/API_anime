@@ -25,7 +25,7 @@ export class GeneroController {
   async findAll() {
     return await this.generoService.findAll();
   }
-
+   
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.generoService.findOne(+id);

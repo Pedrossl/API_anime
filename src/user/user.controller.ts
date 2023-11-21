@@ -33,6 +33,7 @@ export class UserController {
     }
   }
   
+  @IsPublic()
   @Get()
   async findAll(): Promise<{ data: UserEntity[] }> {
     const list = await this.model.find();

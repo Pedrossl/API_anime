@@ -10,9 +10,7 @@ export class FavoriteEpisodeController {
   constructor(private readonly favoriteEpisodeService: FavoriteEpisodeService) {}
 
   @Post(':animeId')
-  create(
-  @Param('animeId') animeId: number,
-  @CurrentUser() user: UserEntity,
+  create( @Param('animeId') animeId: number, @CurrentUser() user: UserEntity,
   @Body() createFavoriteEpisodeDto: CreateFavoriteEpisodeDto,
    ) {
     return this.favoriteEpisodeService.create(
