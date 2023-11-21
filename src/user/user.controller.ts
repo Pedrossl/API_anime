@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { UserEntity } from './entity/user.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { IsPublic } from 'src/decorators/is-public.decorator';

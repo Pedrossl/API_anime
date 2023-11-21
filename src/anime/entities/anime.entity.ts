@@ -1,3 +1,4 @@
+import { FavoriteEpisode } from 'src/favorite-episode/entities/favorite-episode.entity';
 import { Genero } from 'src/genero/entities/genero.entity';
 import { UserEntity } from 'src/user/entity/user.entity';
 import {
@@ -6,6 +7,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -41,4 +43,7 @@ export class Anime {
 
   @ManyToMany(() => UserEntity, (user) => user.animes)
   users: UserEntity[];
+
+  @OneToMany(()=> FavoriteEpisode, (favoriteEpisodes)=>favoriteEpisodes.anime)
+  favoriteEpisodes?: FavoriteEpisode[]
 }

@@ -15,6 +15,8 @@ import { Anime } from './anime/entities/anime.entity';
 import { Genero } from './genero/entities/genero.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { FavoriteEpisodeModule } from './favorite-episode/favorite-episode.module';
+import { FavoriteEpisode } from './favorite-episode/entities/favorite-episode.entity';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -46,7 +48,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE,
-        entities: [UserEntity,Anime,Genero],
+        entities: [UserEntity,Anime,Genero,FavoriteEpisode],
         synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
         logging: process.env.TYPEORM_LOGGING === 'false',
         //quando rodar a primiera vez, deixar false, depois mudar para true
@@ -58,6 +60,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
     AuthModule,
     AnimeModule,
     GeneroModule,
+    FavoriteEpisodeModule,
   ],
   controllers: [AppController],
   providers: [
