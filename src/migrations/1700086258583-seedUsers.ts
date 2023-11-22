@@ -24,4 +24,5 @@ export class SeedUsers1700086258583 implements MigrationInterface {
           DELETE FROM user_entity WHERE id IN (1, 2, 3)
         `);
     }
-}
+
+  }

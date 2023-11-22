@@ -22,7 +22,6 @@ export class CreateAnimeDto {
   @IsInt()
   genero_id: number;
 
-  @IsString()
   capa: string;
 
 }

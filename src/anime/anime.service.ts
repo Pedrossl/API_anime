@@ -4,6 +4,7 @@ import { Anime } from './entities/anime.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Genero } from 'src/genero/entities/genero.entity';
+import { UpdateAnimeDto } from './dto/update-anime.dto';
 
 @Injectable()
 export class AnimeService {
@@ -24,6 +25,20 @@ export class AnimeService {
     const anime = this.animeRepository.create(createAnimeDto);
     anime.genero = existeGenero;
     return await this.animeRepository.save(anime);
+  }
+
+  async update(id: number, updateAnimeDto: UpdateAnimeDto) {
+    const anime = await this.animeRepository.findOne({ where: { id } });
+    if (!anime) {
+      return 'not found';
+    }
+    const existeGenero = await this.generoRepository.findOne({
+      where: { id: updateAnimeDto.genero_id },
+    });
+    if (!existeGenero) {
+      return 'not found';
+    }
+    return this.animeRepository.save({ ...anime, ...updateAnimeDto });
   }
 
   findAll() {
@@ -61,7 +76,6 @@ export class AnimeService {
     return { msg: 'Deleted', id };
   }
 
-//quero so passar o id do anime, e muda inverte o valor do destaque
   async updateDestaque(id: number): Promise<Anime | 'not found'> {
     const anime = await this.animeRepository.findOne({ where: { id } });
     if (!anime) {

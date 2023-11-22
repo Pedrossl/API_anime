@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { AnimeService } from './anime.service';
 import { CreateAnimeDto } from './dto/create-anime.dto';
@@ -51,5 +52,10 @@ export class AnimeController {
   @Patch('/destaque/:id')
   updateDestaque(@Param('id', ParseIntPipe) id: number) {
     return this.animeService.updateDestaque(id);
+  }
+
+  @Put(':id')
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateAnimeDto: UpdateAnimeDto) {
+    return this.animeService.update(id, updateAnimeDto);
   }
 }

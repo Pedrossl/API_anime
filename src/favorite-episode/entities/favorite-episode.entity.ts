@@ -7,11 +7,11 @@ export class FavoriteEpisode {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity,{onDelete: 'CASCADE'})
     @JoinTable()
     user: UserEntity;
 
-    @ManyToOne(() => Anime)
+    @ManyToOne(() => Anime,{onDelete: 'CASCADE'})
     @JoinTable()
     anime: Anime;
 
