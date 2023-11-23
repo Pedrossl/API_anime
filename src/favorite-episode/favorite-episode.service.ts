@@ -25,13 +25,6 @@ export class FavoriteEpisodeService {
       throw new HttpException('O episódio especificado não existe para o anime fornecido.', 403);
     }
     
-    const favoriteExist = await this.favoriteEpisodeRepository.findOne({
-      where: { user: { id: user_id } }
-    })
-
-    if(favoriteExist) {
-      throw new HttpException('Anime já favoritado', 400);
-    }
 
     const favoriteEpisode = this.favoriteEpisodeRepository.create({ anime, user, episode });
     return await this.favoriteEpisodeRepository.save(favoriteEpisode);
@@ -47,7 +40,11 @@ export class FavoriteEpisodeService {
     return `This action updates a #${id} favoriteEpisode`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} favoriteEpisode`;
+async remove(id: number) {
+  const favoriteEpisode = await this.favoriteEpisodeRepository.findOne({ where: { id } });
+  if(!favoriteEpisode) {
+    throw new HttpException('O episódio favorito não existe.', 403);
   }
+  return this.favoriteEpisodeRepository.delete(favoriteEpisode);
+}
 }

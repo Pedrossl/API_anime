@@ -48,7 +48,7 @@ export class AnimeController {
   remove(@Param('id') id: string) {
     return this.animeService.remove(+id);
   }
-
+  
   @Patch('/destaque/:id')
   updateDestaque(@Param('id', ParseIntPipe) id: number) {
     return this.animeService.updateDestaque(id);
