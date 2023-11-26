@@ -175,4 +175,8 @@ export class UserService {
       return 'Codigo incorreto';
     }
   }
+
+  async me(user: UserEntity): Promise<UserEntity> {
+    return user;
+  }
 }

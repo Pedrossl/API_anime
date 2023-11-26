@@ -76,4 +76,10 @@ export class UserController {
   async verifyEmail(@CurrentUser() user:UserEntity, @Body('code') code: string): Promise<string> {
     return this.userService.verifyCode(code,user.email);
   }
+
+  @Get('/me')
+  async getMe(@CurrentUser() user:UserEntity): Promise<UserEntity> {
+    return user;
+  }
+  
 }
