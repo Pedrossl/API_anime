@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFavoriteEpisodeDto } from './dto/create-favorite-episode.dto';
 import { UpdateFavoriteEpisodeDto } from './dto/update-favorite-episode.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,23 +17,45 @@ export class FavoriteEpisodeService {
     @InjectRepository(FavoriteEpisode)
     private favoriteEpisodeRepository: Repository<FavoriteEpisode>,
     ) {}
-  async create(anime_id: number, user_id: number, episode: number) {
-    const anime = await this.animeRepository.findOne({ where: { id: anime_id } });
-    const user = await this.userRepository.findOne({ where: { id: user_id } });
 
-    if(anime.episodios <= episode) {
-      throw new HttpException('O episódio especificado não existe para o anime fornecido.', 403);
-    }
+    async create(anime_id: number, user_id: number, episode: number) {
+      const anime = await this.animeRepository.findOne({ where: { id: anime_id } });
+      const user = await this.userRepository.findOne({ where: { id: user_id } });
     
+      if (!anime || !user) {
+        throw new NotFoundException('Anime ou usuário não encontrado.');
+      }
+    
+      // Verifique se o usuário já escolheu algum episódio para o anime
+      const existingFavorite = await this.favoriteEpisodeRepository.findOne({
+        where: { anime, user },
+      });
+    
+      if (existingFavorite) {
+        throw new HttpException('O usuário já escolheu um episódio para este anime.', 403);
+      }
+    
+      if (anime.episodios <= episode) {
+        throw new HttpException('O episódio especificado não existe para o anime fornecido.', 403);
+      }
+    
+      const favoriteEpisode = this.favoriteEpisodeRepository.create({ anime, user, episode });
+      return await this.favoriteEpisodeRepository.save(favoriteEpisode);
+    }
 
-    const favoriteEpisode = this.favoriteEpisodeRepository.create({ anime, user, episode });
-    return await this.favoriteEpisodeRepository.save(favoriteEpisode);
-
-  }
-
-  findAll() {
-    return `This action returns all favoriteEpisode`;
-  }
+    async findAll() {
+      const favoriteEpisodes = await this.favoriteEpisodeRepository
+        .createQueryBuilder('favoriteEpisode')
+        .leftJoinAndSelect('favoriteEpisode.anime', 'anime')
+        .leftJoinAndSelect('favoriteEpisode.user', 'user')
+        .getMany();
+  
+      if (!favoriteEpisodes) {
+        throw new NotFoundException('Não existem episódios favoritos.');
+      }
+  
+      return favoriteEpisodes;
+    }
 
 
   update(id: number, updateFavoriteEpisodeDto: UpdateFavoriteEpisodeDto) {
