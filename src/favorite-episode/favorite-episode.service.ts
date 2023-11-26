@@ -26,7 +26,6 @@ export class FavoriteEpisodeService {
         throw new NotFoundException('Anime ou usuário não encontrado.');
       }
     
-      // Verifique se o usuário já escolheu algum episódio para o anime
       const existingFavorite = await this.favoriteEpisodeRepository.findOne({
         where: { anime, user },
       });
@@ -69,4 +68,28 @@ async remove(id: number) {
   }
   return this.favoriteEpisodeRepository.delete(favoriteEpisode);
 }
+
+async findPopularEpisodes() {
+  const popularEpisodes = await this.favoriteEpisodeRepository
+    .createQueryBuilder('favoriteEpisode')
+    .select([
+      'favoriteEpisode.episode',
+      'COUNT(DISTINCT favoriteEpisode.user) as userCount', 
+      'anime.id as animeId',
+      'anime.titulo as animeTitulo',
+    ])
+    .innerJoin('favoriteEpisode.anime', 'anime')
+    .groupBy('favoriteEpisode.episode, anime.id')
+    .orderBy('userCount', 'DESC') 
+    .addOrderBy('favoriteEpisode.episode', 'ASC') 
+    .getRawMany();
+
+
+  if (!popularEpisodes) {
+    throw new NotFoundException('Não existem episódios favoritos.');
+  }
+
+  return popularEpisodes;
+}
+
 }

@@ -4,6 +4,7 @@ import { CreateFavoriteEpisodeDto } from './dto/create-favorite-episode.dto';
 import { UpdateFavoriteEpisodeDto } from './dto/update-favorite-episode.dto';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { UserEntity } from 'src/user/entity/user.entity';
+import { IsPublic } from 'src/decorators/is-public.decorator';
 
 @Controller('favorite-episode')
 export class FavoriteEpisodeController {
@@ -38,5 +39,11 @@ export class FavoriteEpisodeController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.favoriteEpisodeService.remove(+id);
+  }
+
+  @IsPublic()
+  @Get('popular')
+  findPopularEpisodes() {
+    return this.favoriteEpisodeService.findPopularEpisodes();
   }
 }
