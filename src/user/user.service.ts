@@ -134,9 +134,15 @@ export class UserService {
       await this.mailerservice.sendMail({
         to: user.email,
         from: 'Suporte@AnimeCom.com',
-        subject: 'Testing Nest MailerModule ✔',
-        text: 'Bem-vindo',
-        html: `<b>Bem-vindo</b> <p>Seu código de verificação é: ${code}</p>`,
+        subject: 'Verificação de Código',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #333333; text-align: center;">Bem-vindo ao AnimeCom!</h2>
+            <p style="color: #666666;">Seu código de verificação é:</p>
+            <p style="color: #007BFF; font-size: 24px; font-weight: bold; text-align: center;">${code}</p>
+            <p style="color: #666666;">Este código é necessário para se tornar um usuario ativo</p>
+          </div>
+        `,
       });
   
       await this.userRepository.save(user);
@@ -181,7 +187,7 @@ export class UserService {
         throw new Error('Código incorreto');
       }
     } catch (error) {
-      throw new Error(error.message); // Repassa o erro como uma exceção
+      throw new Error(error.message); 
     }
   }
 
